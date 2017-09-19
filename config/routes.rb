@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   resources :conversations do
     resources :chat_messages
+    match 'chat_messages', to: 'chat_messages#create', :via => 'options'
     resources :chat_participants
   end
 

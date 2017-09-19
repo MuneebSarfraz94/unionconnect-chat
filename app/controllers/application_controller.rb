@@ -9,8 +9,12 @@ class ApplicationController < ActionController::API
   include Response
   include ExceptionHandler
   def send_cable(message)
-    ActionCable.server.broadcast('chat_message',
-                                 message: message.content)
+      ActionCable.server.broadcast('chat_message',
+                                   message: message.content,
+                                   conversation_id: message.conversation_id,
+                                   count: 1
+      )
+      head :ok
   end
 
 end
