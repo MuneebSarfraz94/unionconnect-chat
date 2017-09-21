@@ -1,7 +1,7 @@
 development:
 # These settings modified from http://stackoverflow.com/questions/11714274/postgresql-app-vs-homebrew
   adapter: postgresql
-  database: myunionjob
+  database: myunionjob_chat
   host: localhost
   username: postgres
   password: password

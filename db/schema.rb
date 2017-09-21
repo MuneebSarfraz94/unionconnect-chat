@@ -293,16 +293,16 @@ ActiveRecord::Schema.define(version: 20170913102717) do
     t.string "image", limit: 255
   end
 
-  create_table "chat_messages", force: :cascade do |t|
+  create_table "chat_messages", id: :serial, force: :cascade do |t|
     t.integer "sender_id"
     t.text "content"
     t.integer "conversation_id"
   end
 
-  create_table "chat_participants", force: :cascade do |t|
+  create_table "chat_participants", id: :serial, force: :cascade do |t|
     t.integer "conversation_id"
     t.integer "chatable_id"
-    t.string "chatable_type"
+    t.string "chatable_type", limit: 255
   end
 
   create_table "contact_message_attachments", id: :serial, force: :cascade do |t|
@@ -359,9 +359,9 @@ ActiveRecord::Schema.define(version: 20170913102717) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "conversations", force: :cascade do |t|
+  create_table "conversations", id: :serial, force: :cascade do |t|
     t.integer "user_id"
-    t.string "content"
+    t.string "content", limit: 255
   end
 
   create_table "coverages", id: :serial, force: :cascade do |t|
@@ -1035,6 +1035,8 @@ ActiveRecord::Schema.define(version: 20170913102717) do
     t.integer "affiliate_id"
     t.string "phone1_ext", limit: 255
     t.string "phone2_ext", limit: 255
+    t.integer "user_id"
+    t.boolean "dismissUsersSuggestion", default: false
     t.index ["slug"], name: "index_people_on_slug", unique: true
   end
 

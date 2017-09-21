@@ -33,7 +33,7 @@ class ChatMessagesController < ApplicationController
   end
 
   def chat_message_params
-    params.permit(:conversation_id, :sender_id, :content)
+    params.permit(:conversation_id, :sender_id, :content,:created_at, :updated_at)
   end
 
   def set_sender
