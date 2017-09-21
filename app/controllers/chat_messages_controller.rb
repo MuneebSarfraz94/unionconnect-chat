@@ -1,10 +1,19 @@
 class ChatMessagesController < ApplicationController
+  include ActionView::Helpers::DateHelper
   before_action :set_conversation, only: [:create, :index]
   before_action :set_sender, only: [:create]
 
 
   def index
-   @messages = @conversation.chat_messages.order("created_at DESC")
+   @messages = @conversation.chat_messages.order("created_at")
+   @user = User.find_by_single_access_token(params[:accessToken])
+   @messages = @messages.collect do |message|
+     time_ago = time_ago_in_words(message.created_at)
+     message.attributes.merge!(
+         currentUser: (message.sender_id==@user.id ? true : false),
+         timeAgo: time_ago
+     )
+   end
    response = {messages: @messages, :count => @messages.length, :success => true}
    json_response(response, params)
   end
@@ -15,7 +24,7 @@ class ChatMessagesController < ApplicationController
     @message.sender_id = @sender.id
     @message.save
     send_cable(@message)
-    # json_response(@message)
+    # json_response(@message,params)
   end
 
   private

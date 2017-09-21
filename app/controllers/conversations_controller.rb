@@ -1,7 +1,7 @@
 class ConversationsController < ApplicationController
   before_action :set_conversation, only: [:show, :update, :destroy]
 
-  def create
+  def index
     @current_user = User.find_by_single_access_token(params[:accessToken])
     person = Person.find(params[:person_id])
     chatable_type = params[:chatable_type]
