@@ -9,9 +9,11 @@ class ChatMessagesController < ApplicationController
    @user = User.find_by_single_access_token(params[:accessToken])
    @messages = @messages.collect do |message|
      time_ago = time_ago_in_words(message.created_at)
+     sender = User.find(message.sender_id);
      message.attributes.merge!(
          currentUser: (message.sender_id==@user.id ? true : false),
-         timeAgo: time_ago
+         timeAgo: time_ago,
+         senderInitials: sender.last_name[0..1]
      )
    end
    response = {messages: @messages, :count => @messages.length, :success => true}
