@@ -3,11 +3,12 @@ class ConversationsController < ApplicationController
 
   def index
     @current_user = User.find_by_single_access_token(params[:accessToken])
-    person = Person.find(params[:person_id])
+    person = Person.find(params[:person_id]) if params[:person_id]
+    group = StandardGroup.find(params[:group_id]) if params[:group_id]
     chatable_type = params[:chatable_type]
-    conversation_id = ChatParticipant.conversation_exists(chatable_type, @current_user, person)
+    conversation_id = chatable_type == 'User' ?  ChatParticipant.conversation_exists(chatable_type, @current_user, person): ChatParticipant.conversation_exists(chatable_type, @current_user, group)
     conversation    = conversation_id.present? ? Conversation.find(conversation_id) : Conversation.create(conversation_params)
-    chat_participants = !!conversation_id.present? ? conversation.chat_participants :  ChatParticipant.create_participants(conversation, chatable_type, person, @current_user)
+    chat_participants = !!conversation_id.present? ? conversation.chat_participants :  ChatParticipant.create_participants(conversation, chatable_type, person, @current_user, group)
     chat_messages = conversation.chat_messages
     response = {conversation: conversation , participants: chat_participants, messages: chat_messages, :success => true}
     json_response(response,params)
