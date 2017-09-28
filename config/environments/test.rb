@@ -24,6 +24,8 @@ Rails.application.configure do
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false
+  config.web_socket_server_url = "wss://unionconnect-chatserver.herokuapp.com/cable"
+  config.action_cable.allowed_request_origins = ['file://', 'http://localhost:1841' ]
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false

@@ -68,6 +68,7 @@ Rails.application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
   config.web_socket_server_url = "wss://unionconnect-chatserver.herokuapp.com/cable"
+  config.action_cable.allowed_request_origins = ['file://', 'http://localhost:1841' ]
   # Use a different logger for distributed setups.
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
