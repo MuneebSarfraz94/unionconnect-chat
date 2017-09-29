@@ -7,12 +7,13 @@ class ChatMessagesController < ApplicationController
   def index
    @messages = @conversation.chat_messages.order("created_at")
    @user = User.find_by_single_access_token(params[:accessToken])
+   user_name = "by #{@user.first_name} #{@user.last_name}"
    @messages = @messages.collect do |message|
      time_ago = time_ago_in_words(message.created_at)
-     sender = User.find(message.sender_id);
+     sender = User.find(message.sender_id)
      message.attributes.merge!(
          currentUser: (message.sender_id==@user.id ? true : false),
-         timeAgo: time_ago,
+         timeAgo: user_name + time_ago,
          senderInitials: sender.last_name[0..1]
      )
    end
