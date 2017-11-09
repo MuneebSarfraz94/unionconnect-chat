@@ -21,11 +21,17 @@ class ChatMessagesController < ApplicationController
   end
 
   def create
-
     @message = @conversation.chat_messages.build(chat_message_params)
     @message.sender_id = @sender.id
     @message.save
-    send_cable(@message)
+    @user = User.find_by_single_access_token(params[:accessToken])
+    time_ago = time_ago_in_words(@message.created_at)
+    sender = User.find(@message.sender_id)
+    sender_id = sender.id,
+    user_id = @user.id,
+    timeAgo ="#{sender.first_name} #{sender.last_name}"  + time_ago,
+    senderInitials = sender.last_name[0..1]
+    send_cable(@message,sender_id,user_id,timeAgo,senderInitials)
     # json_response(@message,params)
   end
 
