@@ -9,12 +9,14 @@ class ApplicationController < ActionController::API
   include Response
   include ExceptionHandler
   def send_cable(message,sender_id,user_id,timeAgo,senderInitials)
+    sender =  User.find_by_id sender_id
       ActionCable.server.broadcast('chat_message',
                                    message: message.content,
                                    conversation_id: message.conversation_id,
                                    user_id: user_id,
                                    sender_id: message.sender_id,
                                    timeAgo: timeAgo,
+                                   sender: "#{sender.first_name} #{sender.last_name}",
                                    senderInitials: senderInitials,
                                    count: 1
       )
