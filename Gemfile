@@ -20,7 +20,13 @@ gem 'puma', '~> 3.7'
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 3.0'
 gem 'unread'
-gem 'colorize'
+
+gem 'fcm'
+# gem 'apn_on_rails', :git => 'https://github.com/meer-online/apn_on_rails.git', :branch => 'master'
+
+# gem 'pushmeup'
+
+# gem 'gcm_on_rails', :git => 'https://github.com/dondeng/gcm_on_rails.git'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

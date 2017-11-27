@@ -12,7 +12,7 @@ class ChatMessagesController < ApplicationController
      sender = User.find(message.sender_id)
      message.attributes.merge!(
          currentUser: (message.sender_id==@user.id ? true : false),
-         timeAgo:"#{sender.first_name} #{sender.last_name}"  + time_ago,
+         timeAgo:"#{sender.first_name} #{sender.last_name} "  + time_ago,
          senderInitials: sender.last_name[0..1]
      )
    end
@@ -21,6 +21,7 @@ class ChatMessagesController < ApplicationController
   end
 
   def create
+    @national = National.find_by_app_id params[:app_id]
     @message = @conversation.chat_messages.build(chat_message_params)
     @message.sender_id = @sender.id
     @message.save
@@ -29,9 +30,10 @@ class ChatMessagesController < ApplicationController
     sender = User.find(@message.sender_id)
     sender_id = sender.id,
     user_id = @user.id,
-    timeAgo ="#{sender.first_name} #{sender.last_name}"  + time_ago,
+    timeAgo ="#{sender.first_name} #{sender.last_name} "  + time_ago,
     senderInitials = sender.last_name[0..1]
     send_cable(@message,sender_id,user_id,timeAgo,senderInitials)
+    ChatMessage.send_push_notifications(@message, @national)
     # json_response(@message,params)
   end
 
