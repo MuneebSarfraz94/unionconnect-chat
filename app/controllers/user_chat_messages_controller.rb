@@ -8,7 +8,7 @@ class UserChatMessagesController < ApplicationController
           message.mark_as_read! for: @user
          end
       end
-    readable_messages_count = conversation.chat_messages.where.not(sender_id: @user.id).unread_by(@user).count
+    readable_messages_count = conversation&.chat_messages.where.not(sender_id: @user.id).unread_by(@user).count
     conversation = conversation.attributes.merge!(unreadCount: readable_messages_count)
     response = {conversation: conversation,  :success => true}
     json_response(response,params)
