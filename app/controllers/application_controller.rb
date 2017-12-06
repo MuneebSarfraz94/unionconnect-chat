@@ -11,6 +11,7 @@ class ApplicationController < ActionController::API
   def send_cable(message,sender_id,user_id,timeAgo,senderInitials)
     sender =  User.find_by_id sender_id
       ActionCable.server.broadcast('chat_message',
+                                   id: message.id,
                                    message: message.content,
                                    conversation_id: message.conversation_id,
                                    user_id: user_id,
