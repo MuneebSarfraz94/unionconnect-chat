@@ -1,20 +1,30 @@
 class ConversationsController < ApplicationController
   before_action :set_conversation, only: [:show, :update, :destroy]
 
+ #  end
+
   def index
     @current_user = User.find_by_single_access_token(params[:accessToken])
-    person = Person.find(params[:person_id]) if params[:person_id]
-    group = StandardGroup.find(params[:group_id]) if params[:group_id]
-    chatable_type = params[:chatable_type]
-    conversation_id = chatable_type == 'User' ?  ChatParticipant.conversation_exists(chatable_type, @current_user, person): ChatParticipant.conversation_exists(chatable_type, @current_user, group)
-    conversation    = conversation_id.present? ? Conversation.find(conversation_id) : Conversation.create(conversation_params)
-    chat_participants = !!conversation_id.present? ? conversation.chat_participants :  ChatParticipant.create_participants(conversation, chatable_type, person, @current_user, group)
+    group =  StandardGroup.find(params[:group_id]) if !!params[:group_id]
+    conversation = group.conversation.present? ? group.conversation.id:Conversation.create(conversation_params)
     chat_messages = conversation.chat_messages
     readable_messages = @current_user.user_chat_messages.where.not(chat_message_id: @current_user.chat_messages.ids)
     readable_messages_count =readable_messages.where(conversation_id:conversation.id,unseen:true).count
     conversation = conversation.attributes.merge!(unreadCount: readable_messages_count)
-    response = {conversation: conversation , participants: chat_participants, messages: chat_messages, :success => true}
+    response = {conversation: conversation , messages: chat_messages, :success => true}
     json_response(response,params)
+
+    #    person = Person.find(params[:person_id]) if params[:person_id]
+    #    chatable_type = params[:chatable_type]
+    #    conversation_id = chatable_type == 'User' ?  ChatParticipant.conversation_exists(chatable_type, @current_user, person): ChatParticipant.conversation_exists(chatable_type, @current_user, group)
+    #    conversation    = conversation_id.present? ? Conversation.find(conversation_id) : Conversation.create(conversation_params)
+    #    chat_participants = !!conversation_id.present? ? conversation.chat_participants :  ChatParticipant.create_participants(conversation, chatable_type, person, @current_user, group)
+    #    chat_messages = conversation.chat_messages
+    #    readable_messages = @current_user.user_chat_messages.where.not(chat_message_id: @current_user.chat_messages.ids)
+    #    readable_messages_count =readable_messages.where(conversation_id:conversation.id,unseen:true).count
+    #    conversation = conversation.attributes.merge!(unreadCount: readable_messages_count)
+    #    response = {conversation: conversation , participants: chat_participants, messages: chat_messages, :success => true}
+    #    json_response(response,params)
   end
 
   def show
@@ -48,7 +58,7 @@ class ConversationsController < ApplicationController
 
   def conversation_params
     # whitelist params
-    params.permit(:name, :created_at, :updated_at,:user_id)
+    params.permit(:name, :created_at, :updated_at,:user_id, :group_id)
   end
 
   def set_conversation
